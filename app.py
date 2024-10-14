@@ -6,6 +6,14 @@ from telethon import TelegramClient, errors, events
 import asyncio
 import threading
 
+try:
+    from telethon import TelegramClient, events, errors
+except ImportError:
+    print("Telethon is not installed. Please install it by running:")
+    print("pip install -r requirements.txt")
+    exit()
+
+
 # Flask app
 app = Flask(__name__)
 
