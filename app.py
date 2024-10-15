@@ -1,7 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask
 import subprocess
 import threading
-import time
 import os
 
 app = Flask(__name__)
@@ -15,13 +14,36 @@ def download_unzip_and_run_script():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Run Script</title>
+    </head>
+    <body>
+        <h1>Script Control</h1>
+        <button onclick="startScript()">Run Script</button>
+
+        <script>
+            function startScript() {
+                fetch('/run-script', { method: 'POST' })
+                    .then(response => response.text())
+                    .then(data => alert(data))
+                    .catch(error => console.error('Error:', error));
+            }
+        </script>
+    </body>
+    </html>
+    """
+    return html_content
 
 @app.route('/run-script', methods=['POST'])
 def run_script():
     if not any(thread.name == "ScriptThread" for thread in threading.enumerate()):
         thread = threading.Thread(target=download_unzip_and_run_script, name="ScriptThread")
-        thread.daemon = True  # Allows thread to exit when the main program exits
+        thread.daemon = True
         thread.start()
 
     return 'Script downloading, unzipping, and running in the background.'
